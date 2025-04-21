@@ -18,15 +18,11 @@ export function Firstpage() {
         e.preventDefault(); 
     }
     return (
-        
-        <div className="container">
+    <div className="container">
         <Login ></Login>  
-        <Titulo titulo="MACPlanner" cuerpo="“Plan your future, the MAC way”">  </Titulo> 
+        <Titulo titulo="GHAM" cuerpo="“Simplificando lo complejo”">  </Titulo> 
         <Detalles> </Detalles>
     </div>
         
-       
-       
-   
   );
 }

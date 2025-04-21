@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
-export function Tarjeta ({titulo,children,boton}) {
-  const StyleCard= styled.div`
+import { useState } from "react";
+const StyleCard= styled.div`
   .form{
     display: flex;
     flex-direction: column;
@@ -99,6 +99,8 @@ export function Tarjeta ({titulo,children,boton}) {
   .button:hover:after {
     opacity: 1;
   };`
+export function Tarjeta ({titulo,children,onClick= () => {}, textoBoton="Buscar"}) {
+   
     return(
       <StyleCard>
          <div className="card">
@@ -106,14 +108,12 @@ export function Tarjeta ({titulo,children,boton}) {
           <div className="form">
             <h2 id="heading">{titulo}</h2>
             {children}
-            <button className="button">
-             <span>{boton}</span>
-            </button>
+              <button className="button" onClick={onClick}>
+                <span>{textoBoton}</span>
+              </button>
           </div>
         </div>
       </div>
-    
-
       </StyleCard>
    );
 

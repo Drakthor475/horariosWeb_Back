@@ -4,10 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { Horarios } from "./horariosweb";
 import axios from "axios";
 import { useState } from "react";
-export function Login(){
-    
-    
-    const StyledWrapper = styled.div`
+const StyledWrapper = styled.div`
   .wrapper {
     --input-focus: #2d8cf0;
     --font-color: #323232;
@@ -209,14 +206,15 @@ export function Login(){
     color: var(--font-color);
     cursor: pointer;
   }`;
+export function Login(){
   const [loginData, setLoginData] = useState({
-    numeroCuenta: '',
+    noCuenta: '',
     contraseña: ''
   });
   
   const [registerData, setRegisterData] = useState({
+    noCuenta: '',
     nombre: '',
-    numeroCuenta: '',
     contraseña: ''
   });
   const handleLoginChange = (e) => {
@@ -229,14 +227,33 @@ export function Login(){
     setRegisterData(prev => ({ ...prev, [name]: value }));
   };
   const navigate = useNavigate();
-     const handleLogin = (e) => {
-          e.preventDefault(); 
-          navigate("/horariosweb");
+     
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await axios.post('http://localhost:3000/usuarios/login', loginData);
+      if (response.data) {
+        localStorage.setItem('userToken', response.data.token);
+        navigate("/horariosweb");
       }
+    } catch (error) {
+      console.error('Error al iniciar sesión:', error);
+      alert('Credenciales incorrectas');
+    }
+  };
       
-      const handleSignup = (e) => {
-          e.preventDefault(); 
-         }
+  const handleSignup = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await axios.post('http://localhost:3000/usuarios/register', registerData);
+      if (response.data) {
+        alert('Registro exitoso! Por favor inicia sesión.');
+      }
+    } catch (error) {
+      console.error('Error al registrar:', error);
+      alert('Error en el registro');
+    }
+  };
 
     return(
             <StyledWrapper>
@@ -252,7 +269,7 @@ export function Login(){
                         <form className="flip-card__form" onSubmit={handleLogin}>
                           <input 
                             className="flip-card__input" 
-                            name="numeroCuenta" 
+                            name="noCuenta" 
                             placeholder="Numero de cuenta" 
                             type="text" 
                             value={loginData.numeroCuenta}
@@ -282,7 +299,7 @@ export function Login(){
                           />
                           <input 
                             className="flip-card__input" 
-                            name="numeroCuenta" 
+                            name="noCuenta" 
                             placeholder="Numero de cuenta" 
                             type="text" 
                             value={registerData.numeroCuenta}
