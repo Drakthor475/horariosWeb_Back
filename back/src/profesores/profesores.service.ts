@@ -15,7 +15,7 @@ export class ProfesoresService{
       const profesor=await this.ProfesorRepository.create(createProfesoreDto)
       return await this.ProfesorRepository.save(profesor);
     }
- 
+
   async findOneByNombre(nombreProfesor: string){
     const profesor= await this.ProfesorRepository.findOne({
       where:{nombre:nombreProfesor}
