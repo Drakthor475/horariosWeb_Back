@@ -16,6 +16,18 @@ export class ProfesoresService{
       return await this.ProfesorRepository.save(profesor);
     }
 
+    async findall(): Promise<Profesor[]> {
+      return this.ProfesorRepository.find();
+    }
+    
+    async findLast(): Promise<Profesor | null> {
+      const [last] = await this.ProfesorRepository.find({
+        order: { id_profesor: 'DESC' },
+        take: 1
+      });
+      return last || null;
+    }
+ 
   async findOneByNombre(nombreProfesor: string){
     const profesor= await this.ProfesorRepository.findOne({
       where:{nombre:nombreProfesor}

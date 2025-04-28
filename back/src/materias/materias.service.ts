@@ -10,7 +10,7 @@ import { UserRole } from 'src/usuarios/dataType';
 @Injectable()
 export class MateriasService {
   constructor(
-  @InjectRepository(Materia)
+    @InjectRepository(Materia)
     private readonly materiaRepository: Repository<Materia>,
     @InjectRepository(Horario)
     private readonly horarioRepository: Repository<Horario>,
@@ -18,7 +18,8 @@ export class MateriasService {
 
   }
     async create(createMateriaDto:CreateMateriaDto){
-      const materia=this.materiaRepository.create({nombre:createMateriaDto.nombre,semestre:createMateriaDto.semestre})
+      const materia=this.materiaRepository.create({id_materia:createMateriaDto.id_materia, nombre:createMateriaDto.nombre,semestre:createMateriaDto.semestre})
+      console.log('se creo matria con el id: ',)
       return await this.materiaRepository.save(materia);
     }
     
@@ -83,13 +84,19 @@ export class MateriasService {
     return nuevaMateria;
   }
   
-  async findById( idMat:number){
-    const materia= await this.materiaRepository.findOne({
-      where:{id_materia:idMat}
-    })
-    if (!materia) throw new Error;
-    return materia; 
+  async findById(id: number): Promise<Materia> {
+    try {
+      const materia = await this.materiaRepository.findOne({ where: { id_materia: id } });
+      if (!materia) {
+        throw new Error(`Materia con id ${id} no encontrada`);
+      }
+      return materia;
+    } catch (error) {
+      console.error(`Error buscando materia ${id}:`, error);
+      throw new Error(`Error buscando materia ${id}: ${error.message || error}`);
+    }
   }
+  
   
   async findAll(){
     const materias = await this.materiaRepository.find()

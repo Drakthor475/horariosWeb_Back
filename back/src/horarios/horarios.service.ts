@@ -24,10 +24,41 @@ export class HorariosService {
 
   async create(createHorarioDto: CreateHorarioDto): Promise<Horario> {
     const horario = this.horarioRepository.create(createHorarioDto);
-    horario.materia = await this.materiaService.findById(createHorarioDto.id_Materia);
-    horario.profesor = await this.profesorService.findByid(createHorarioDto.id_Profesor);
-
+  
+    const materia = await this.materiaService.findById(createHorarioDto.id_Materia).catch(() => null);
+    if (!materia) {
+      throw new Error(`Materia con id ${createHorarioDto.id_Materia} no encontrada`);
+    }
+  
+    const profesor = await this.profesorService.findByid(createHorarioDto.id_Profesor).catch(() => null);
+    if (!profesor) {
+      throw new Error(`Profesor con id ${createHorarioDto.id_Profesor} no encontrado`);
+    }
+  
+    horario.materia = materia;
+    horario.profesor = profesor;
+  
     return await this.horarioRepository.save(horario);
+  }
+  
+
+  async countHorariosByMateriaProfesorGrupo(id_Materia: number, id_Profesor: number, grupo: string): Promise<number> {
+    return this.horarioRepository.count({
+      where: {
+        materia: { id_materia: id_Materia },
+        profesor: { id_profesor: id_Profesor },
+        grupo: grupo,
+      },
+    });
+  }
+  
+  
+  async findLast(): Promise<Horario | null> {
+    const [last] = await this.horarioRepository.find({
+      order: { id_horario: 'DESC' },
+      take: 1
+    });
+    return last || null;
   }
 
   async obtenerMateriasYProfesoresPorProfesor(idProfesor: number) {
@@ -38,6 +69,7 @@ export class HorariosService {
       relations: ['materia'],
     });
 
+    
 
     const materiasUnicas = new Map<number, string>();
 

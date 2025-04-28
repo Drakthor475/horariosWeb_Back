@@ -1,6 +1,7 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
+import { ScrapingService } from './scraping.service';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -17,6 +18,9 @@ async function bootstrap() {
     methods: ['GET', 'POST'],
     credentials: true, // si usas cookies o autenticación
   });
+
+  const scraperService = app.get(ScrapingService);
+  await scraperService.executeScrapingAndSave();
 
   await app.listen(process.env.PORT ?? 3000);
 
