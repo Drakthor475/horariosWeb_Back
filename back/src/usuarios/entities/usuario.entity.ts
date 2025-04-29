@@ -1,12 +1,12 @@
 import { IsNotEmpty } from 'class-validator';
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, PrimaryColumn } from 'typeorm';
+import { Entity, Column, PrimaryColumn } from 'typeorm';
 import { UserRole } from '../dataType';
 
 
 @Entity()
 export class Usuario {
 
-    @PrimaryColumn()
+    @PrimaryColumn({unique: true})
     @IsNotEmpty()
     noCuenta:string
 

@@ -9,14 +9,14 @@ import { HorariosService } from './horarios/horarios.service';
 export class ScrapingService {
   private readonly url = 'https://escolares.acatlan.unam.mx/HISTORIA/ProcesoGRUpoSISaturacionORDINArioAlumno.asp';
   private readonly headers = {
-    "User-Agent": "",
-    "Accept": "",
-    "Accept-Encoding": "",
-    "Accept-Language": "",
-    "Cache-Control": "",
-    "Upgrade-Insecure-Requests": ""
+    "User-Agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36",
+    "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8",
+    "Accept-Encoding": "gzip, deflate, br, zstd",
+    "Accept-Language": "es-ES,es;q=0.5",
+    "Cache-Control": "max-age=0",
+    "Upgrade-Insecure-Requests": "1"
   };
-  private readonly cookies= 'coockies';
+  private readonly cookies= 'ASPSESSIONIDAUCQBAAB=JIHFJGCDHANPNEGEALLOMFDN; ASPSESSIONIDSEASDDDD=KLECICPDMIALHEMOFPJEDBPM; ASPSESSIONIDAUBSADAA=KEDIKGDAALGGIFFKCHPAEADA; ASPSESSIONIDQGBTDCCD=KGLOKCABHKHBLJLOHOLABDNL; ASPSESSIONIDCUDTDABA=KLHJJOMBHHKCLAPNKMOOOGEM; ASPSESSIONIDAWBRBDAA=PIDOFFADPEECMCNBFGDMAOJG; ASPSESSIONIDQGQBDAAB=OJPLILDAGHGKLBPHIINKMLFI';
 
 
   constructor(

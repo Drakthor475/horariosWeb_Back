@@ -52,7 +52,7 @@ async guardarHorarios(@Body() createHorarioDto: CreateHorarioDto[]) {
 
   @Get('materias-profesores/:idMateria')
   async getMateriasYProfesores(@Param('idMateria') idMateria: number) {
-    return await this.horariosService.obtenerMateriasYProfesoresPorProfesor(idMateria);
+    return await this.horariosService.obtenerMateriasYProfesoresPorMateria(idMateria);
   }
 
 

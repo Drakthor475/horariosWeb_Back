@@ -14,9 +14,6 @@ export class CreateUsuarioDto {
     @IsString()
     contraseña:string
 
-    @IsString()
-    @IsOptional()
-    nivelUsuario:UserRole
 
 
 }

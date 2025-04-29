@@ -61,57 +61,42 @@ export class HorariosService {
     return last || null;
   }
 
-  async obtenerMateriasYProfesoresPorProfesor(idProfesor: number) {
+async obtenerMateriasYProfesoresPorMateria(idMateria: number) {
     const horariosProfesor = await this.horarioRepository.find({
       where: {
-        profesor: { id_profesor: idProfesor }
+        materia: { id_materia: idMateria }
       },
-      relations: ['materia'],
+      relations: ['materia', 'profesor'],
     });
 
-    
-
-    const materiasUnicas = new Map<number, string>();
-
-    for (const horario of horariosProfesor) {
-      if (horario.materia) {
-        materiasUnicas.set(horario.materia.id_materia, horario.materia.nombre);
-      }
+    // Definir el tipo para los profesores
+    type Profesor = {
+      id: number;
+      nombre: string;
     }
 
-    const resultado: {
-      materia: string;
-      profesores: { id: number; nombre: string }[];
-    }[] = [];
+    const profesoresUnicos: Profesor[] = []; // Especificar el tipo aquí
+    const profesoresVistos = new Set<number>(); // También podemos tipar el Set
 
-    for (const [idMateria, nombreMateria] of materiasUnicas.entries()) {
-      const horariosMateria = await this.horarioRepository.find({
-        where: {
-          materia: { id_materia: idMateria }
-        },
-        relations: ['profesor'],
-      });
-
-      const profesoresSet = new Map<number, string>();
-
-      for (const horario of horariosMateria) {
-        if (horario.profesor) {
-          profesoresSet.set(horario.profesor.id_profesor, horario.profesor.nombre);
-        }
+    horariosProfesor.forEach(horario => {
+      if (horario.profesor && !profesoresVistos.has(horario.profesor.id_profesor)) {
+        profesoresUnicos.push({
+          id: horario.profesor.id_profesor,
+          nombre: horario.profesor.nombre
+        });
+        profesoresVistos.add(horario.profesor.id_profesor);
       }
+    });
 
-      const profesoresArray = Array.from(profesoresSet.entries()).map(
-        ([id, nombre]) => ({ id, nombre })
-      );
-
-      resultado.push({
-        materia: nombreMateria,
-        profesores: profesoresArray,
-      });
-    }
-
-    return resultado;
-  }
+    // Formatear la respuesta como espera el frontend
+    return [{
+      materia: {
+        id_materia: idMateria,
+        nombre: horariosProfesor[0]?.materia?.nombre || ''
+      },
+      profesores: profesoresUnicos
+    }];
+}
 
   async buscarPorSemestre(semestre: number): Promise<Horario[]> {
     return await this.horarioRepository.find({
