@@ -5,6 +5,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Horario } from 'src/horarios/entities/horario.entity';
 import { UserRole } from 'src/usuarios/dataType';
+import { MateriaDto } from './dto/updateMateria.dto';
 
 
 @Injectable()
@@ -65,23 +66,20 @@ export class MateriasService {
     return semestre; 
   }
 
-  async update(id: number, newId: number){
-    const materia = await this.materiaRepository.findOneBy({ id_materia: id });
-
+  async update(materiaDto: MateriaDto, id_Materia: number) {
+    const materia = await this.materiaRepository.findOneBy({ id_materia: id_Materia });
+  
     if (!materia) {
-      throw new NotFoundException(`Materia con id ${id} no encontrada`);
+      throw new NotFoundException(`Materia con id ${id_Materia} no encontrada`);
     }
-
-    // Crea una nueva materia copiando todo y cambiando el ID
-    const nuevaMateria = { ...materia, id_materia: newId };
-
-    // Guarda la nueva materia
-    await this.materiaRepository.save(nuevaMateria);
-
-    // Elimina la materia vieja
-    await this.materiaRepository.delete(id);
-
-    return nuevaMateria;
+  
+    // Solo actualiza las propiedades definidas en el DTO
+    Object.assign(materia, {
+      ...materiaDto,
+    });
+  
+    await this.materiaRepository.save(materia);
+    return materia;
   }
   
   async findById(id: number): Promise<Materia> {

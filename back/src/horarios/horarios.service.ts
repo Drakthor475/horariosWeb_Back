@@ -53,6 +53,7 @@ export class HorariosService {
   }
   
   
+  
   async findLast(): Promise<Horario | null> {
     const [last] = await this.horarioRepository.find({
       order: { id_horario: 'DESC' },
