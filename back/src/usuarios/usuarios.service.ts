@@ -38,7 +38,7 @@ export class UsuariosService {
     
     if(!contra) throw new Error
     
-    return true;
+    return usuario.nivelUsuario;
   }
 
   async seeAllUser(){

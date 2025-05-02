@@ -21,7 +21,7 @@ import { ProfesoresService } from './profesores/profesores.service';
       type: 'sqlite',
       database: 'sistema_Horarios', // nombre del archivo de SQLite (puedes cambiarlo si quieres)
       synchronize: true,           // sincroniza automáticamente las entidades con la base de datos
-      dropSchema: true,           // mantiene los datos al reiniciar (útil durante desarrollo)
+      dropSchema: false,           // mantiene los datos al reiniciar (útil durante desarrollo)
       autoLoadEntities: true,      // sigue cargando automáticamente las entidades
       // logging: true,            // puedes descomentar si quieres ver logs SQL
     }),

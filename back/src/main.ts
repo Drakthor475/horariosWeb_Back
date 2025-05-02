@@ -15,12 +15,12 @@ async function bootstrap() {
   );
   app.enableCors({
     origin: 'http://localhost:5173', // tu frontend
-    methods: ['GET', 'POST'],
+    methods: ['GET', 'PSOST'],
     credentials: true, // si usas cookies o autenticación
   });
 
-  const scraperService = app.get(ScrapingService);
-  await scraperService.executeScrapingAndSave();
+  //const scraperService = app.get(ScrapingService);
+  //await scraperService.executeScrapingAndSave();
 
   await app.listen(process.env.PORT ?? 3000);
 
