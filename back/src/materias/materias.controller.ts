@@ -1,7 +1,9 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query, ParseIntPipe, Put } from '@nestjs/common';
 import { MateriasService } from './materias.service';
 import { CreateMateriaDto } from './dto/create-materia.dto';
 import { UserRole } from 'src/usuarios/dataType';
+import { MateriaDto } from './dto/updateMateria.dto';
+import { Materia } from './entities/materia.entity';
 
 
 @Controller('materias')
@@ -11,6 +13,14 @@ export class MateriasController {
   @Post()
   create(@Body() createMateriaDto: CreateMateriaDto) {
     return this.materiasService.create(createMateriaDto);
+  }
+
+  @Put(':id')
+  async update(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() materiaDto: MateriaDto,
+  ): Promise<Materia> {
+    return this.materiasService.update(materiaDto, id);
   }
 
   
@@ -26,14 +36,6 @@ export class MateriasController {
     await this.materiasService.create(createMateriaDto[i]);
   }
   return console.log("Se guardó con exito");
-  }
-
-  @Patch('change-id/:oldId')
-  async changeId(
-    @Param('oldId') oldId: number,
-    @Body('newId') newId: number,
-  ) {
-    return this.materiasService.update(oldId, newId);
   }
 
   @Delete('delete')
