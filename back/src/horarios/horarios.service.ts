@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
@@ -10,6 +10,8 @@ import { FiltrosHorariosDto } from './dto/filtros-horario.dto';
 import { MateriasService } from 'src/materias/materias.service';
 import { ProfesoresService } from 'src/profesores/profesores.service';
 import { Profesor } from 'src/profesores/entities/profesore.entity';
+import { UpdateHorarioDto } from './dto/horario.dto';
+import { UserRole } from 'src/usuarios/dataType';
 
 @Injectable()
 export class HorariosService {
@@ -62,6 +64,43 @@ export class HorariosService {
     return last || null;
   }
 
+  async update(id_horario: number, updateHorarioDto: UpdateHorarioDto, usuario: UserRole) {
+    // Verifica si el usuario tiene permiso para realizar la operación
+    if (usuario !== UserRole.ADMIN) {
+      throw new Error('No tiene permitido realizar esta operación');
+    }
+
+    // Encuentra el horario
+    const horario = await this.horarioRepository.findOne({where:{id_horario:id_horario}});
+    if (!horario) {
+      throw new NotFoundException('Horario no encontrado');
+    }
+
+    // Actualiza los campos
+    Object.assign(horario, updateHorarioDto);
+
+    // Guarda los cambios
+    await this.horarioRepository.save(horario);
+    return horario;
+  }
+
+  async delete(id_horario: number, usuario: UserRole) {
+    // Verifica si el usuario tiene permiso para realizar la operación
+    if (usuario !== UserRole.ADMIN) {
+      throw new Error('No tiene permitido realizar esta operación');
+    }
+
+    // Encuentra el horario
+    const horario = await this.horarioRepository.findOne({where:{id_horario:id_horario}});
+    if (!horario) {
+      throw new NotFoundException('Horario no encontrado');
+    }
+
+    // Elimina el horario
+    await this.horarioRepository.remove(horario);
+    return { message: 'Horario eliminado correctamente' };
+  }
+
 async obtenerMateriasYProfesoresPorMateria(idMateria: number) {
     const horariosProfesor = await this.horarioRepository.find({
       where: {
@@ -110,7 +149,7 @@ async obtenerMateriasYProfesoresPorMateria(idMateria: number) {
     });
   }
 
-  async delete() {
+  async deleteAll() {
     return await this.horarioRepository.delete({});
   }
 

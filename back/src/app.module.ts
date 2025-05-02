@@ -12,6 +12,7 @@ import { HorariosService } from './horarios/horarios.service';
 import { ProfesoresService } from './profesores/profesores.service';
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigModule } from '@nestjs/config';
+import { AuthModule } from './auth/auth.module';
 
 
 
@@ -43,6 +44,7 @@ import { ConfigModule } from '@nestjs/config';
     ProfesoresModule,
 
     HorariosModule,
+    AuthModule,
 
     
   ],

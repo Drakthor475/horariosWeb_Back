@@ -24,27 +24,36 @@ export class MateriasService {
       return await this.materiaRepository.save(materia);
     }
     
-    async deleteOne(id_Materia:number, usuario:UserRole){
-      if(usuario!=UserRole.ADMIN){
-        throw new Error('No tiene permitido realizar esta operación')
+    async deleteOne(id_Materia: number, usuario: UserRole) {
+      if (usuario !== UserRole.ADMIN) {
+        throw new Error('No tiene permitido realizar esta operación');
       }
-      
-      const result = await this.horarioRepository.find({
-        where:{
-          materia:{
-            id_materia:id_Materia
-          }
-        },
-        relations: ['materia']
     
-      })
-
-      if(result){
-        throw new Error('Esta materia pertenece a horarios, borra los horarios antes')
-      
+      // Primero busca los horarios que tengan esa materia asociada
+      const horarios = await this.horarioRepository.find({
+        where: {
+          materia: { id_materia: id_Materia },
+        },
+        relations: ['materia'],
+      });
+    
+      if (!horarios.length) {
+        throw new Error('No se encontraron horarios con esa materia');
       }
-      return await this.materiaRepository.delete(id_Materia)
+    
+      // Elimina todos los horarios encontrados
+      for (const horario of horarios) {
+        await this.horarioRepository.remove(horario);
+      }
+      const materia =await this.materiaRepository.findOneBy({id_materia:id_Materia})
+      if(!materia){
+        throw new Error('No se encontró materia');
+      }
+      await this.materiaRepository.remove(materia);
+    
+      return { mensaje: 'Horarios eliminados correctamente' };
     }
+    
 
     async delete(){
       return await this.materiaRepository.delete({})
@@ -58,7 +67,7 @@ export class MateriasService {
     return materia;
   }
  
-  async findBySemestre( semestreMateria:number){
+  async findBySemestre( semestreMateria:number, ){
     const semestre= await this.materiaRepository.find({
       where:{semestre:semestreMateria}
     })
@@ -66,7 +75,10 @@ export class MateriasService {
     return semestre; 
   }
 
-  async update(materiaDto: MateriaDto, id_Materia: number) {
+  async update(materiaDto: MateriaDto, id_Materia: number, usuario: UserRole) {
+    if (usuario !== UserRole.ADMIN) {
+      throw new Error('No tiene permitido realizar esta operación');
+    }
     const materia = await this.materiaRepository.findOneBy({ id_materia: id_Materia });
   
     if (!materia) {
