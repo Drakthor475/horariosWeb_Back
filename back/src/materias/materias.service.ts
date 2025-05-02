@@ -18,11 +18,26 @@ export class MateriasService {
   ){
 
   }
-    async create(createMateriaDto:CreateMateriaDto){
-      const materia=this.materiaRepository.create({id_materia:createMateriaDto.id_materia, nombre:createMateriaDto.nombre,semestre:createMateriaDto.semestre})
-      console.log('se creo matria con el id: ',)
-      return await this.materiaRepository.save(materia);
+  async create(createMateriaDto: CreateMateriaDto) {
+    // Si el cliente proporcionó un id_materia
+    if (createMateriaDto.id_materia) {
+      const existente = await this.materiaRepository.findOne({
+        where: { id_materia: createMateriaDto.id_materia },
+      });
+  
+      if (existente) {
+        throw new Error('Ya existe una materia con ese ID');
+      }
     }
+  
+    const materia = this.materiaRepository.create(
+      createMateriaDto
+    );
+  
+    console.log('Se creó materia con el ID:', createMateriaDto.id_materia);
+    return await this.materiaRepository.save(materia);
+  }
+  
     
     async deleteOne(id_Materia: number, usuario: UserRole) {
       if (usuario !== UserRole.ADMIN) {
@@ -83,6 +98,16 @@ export class MateriasService {
   
     if (!materia) {
       throw new NotFoundException(`Materia con id ${id_Materia} no encontrada`);
+    }
+
+    if (
+      materiaDto.id_materia &&
+      materiaDto.id_materia !== id_Materia
+    ) {
+      const materiaExistente = await this.materiaRepository.findOneBy({ id_materia: materiaDto.id_materia });
+      if (materiaExistente) {
+        throw new Error(`Ya existe una materia con el id ${materiaDto.id_materia}`);
+      }
     }
   
     // Solo actualiza las propiedades definidas en el DTO

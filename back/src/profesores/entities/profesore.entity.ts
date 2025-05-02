@@ -1,9 +1,9 @@
 import { Horario } from 'src/horarios/entities/horario.entity';
-import { Entity, Column, PrimaryColumn, OneToMany } from 'typeorm';
+import { Entity, Column, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
 export class Profesor{
-     @PrimaryColumn()
+     @PrimaryGeneratedColumn()
      id_profesor:number;
      
      @Column()

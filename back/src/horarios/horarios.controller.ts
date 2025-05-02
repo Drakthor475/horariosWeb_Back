@@ -47,6 +47,7 @@ export class HorariosController {
 
   @Post('create')
   create(@Body() createHorarioDto: CreateHorarioDto) {
+    
     return this.horariosService.create(createHorarioDto);
   }
 

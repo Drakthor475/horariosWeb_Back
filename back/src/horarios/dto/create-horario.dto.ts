@@ -2,7 +2,7 @@ import { IsNumber, IsString, Length, Max, Min, minLength, MinLength } from "clas
 export class CreateHorarioDto {
 
     @IsNumber()
-    id_horario:number;
+    id_horario?:number;
     
     @IsNumber()
     @Min(7,{message:'Hora no valida'})

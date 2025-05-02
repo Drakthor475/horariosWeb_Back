@@ -25,6 +25,17 @@ export class HorariosService {
   ) {}
 
   async create(createHorarioDto: CreateHorarioDto): Promise<Horario> {
+    
+    if (createHorarioDto.id_horario) {
+      const existente = await this.horarioRepository.findOne({
+        where: { id_horario: createHorarioDto.id_horario },
+      });
+  
+      if (existente) {
+        throw new Error('Ya existe un horario con ese ID');
+      }
+    } 
+
     const horario = this.horarioRepository.create(createHorarioDto);
   
     const materia = await this.materiaService.findById(createHorarioDto.id_Materia).catch(() => null);
@@ -68,6 +79,18 @@ export class HorariosService {
     // Verifica si el usuario tiene permiso para realizar la operación
     if (usuario !== UserRole.ADMIN) {
       throw new Error('No tiene permitido realizar esta operación');
+    }
+
+    if (
+      updateHorarioDto.id_horario &&
+      updateHorarioDto.id_horario !== id_horario
+    ) {
+      const existe = await this.horarioRepository.findOne({
+        where: { id_horario: updateHorarioDto.id_horario },
+      });
+      if (existe) {
+        throw new Error('Ya existe un horario con el id proporcionado');
+      }
     }
 
     // Encuentra el horario

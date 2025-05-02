@@ -1,10 +1,10 @@
 import { Horario } from 'src/horarios/entities/horario.entity';
-import { Entity, Column, PrimaryColumn, OneToMany } from 'typeorm';
+import { Entity, Column, PrimaryColumn, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
 export class Materia {
     
-    @PrimaryColumn()
+    @PrimaryGeneratedColumn()
     id_materia:number;
      
     @Column()

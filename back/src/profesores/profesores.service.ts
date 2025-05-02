@@ -18,6 +18,13 @@ export class ProfesoresService{
   ){}
 
     async create(createProfesoreDto:CreateProfesoreDto){
+      if (createProfesoreDto.id_profesor !== undefined) {
+        const profesorExistente = await this.ProfesorRepository.findOneBy({ id_profesor: createProfesoreDto.id_profesor });
+        if (profesorExistente) {
+          throw new Error(`Ya existe un profesor con el id ${createProfesoreDto.id_profesor}`);
+        }
+      }
+
       const profesor=await this.ProfesorRepository.create(createProfesoreDto)
       return await this.ProfesorRepository.save(profesor);
     }
@@ -42,6 +49,16 @@ export class ProfesoresService{
       
         if (!profesor) {
           throw new NotFoundException(`Materia con id ${id_Profesor} no encontrada`);
+        }
+
+        if (
+          profesorDto.id_profesor &&
+          profesorDto.id_profesor !== id_Profesor
+        ) {
+          const profesorExistente = await this.ProfesorRepository.findOneBy({ id_profesor: profesorDto.id_profesor });
+          if (profesorExistente) {
+            throw new Error(`Ya existe un profesor con el id ${profesorDto.id_profesor}`);
+          }
         }
       
         // Solo actualiza las propiedades definidas en el DTO
