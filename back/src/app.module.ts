@@ -10,6 +10,7 @@ import { ScrapingService } from './scraping.service';
 import { MateriasService } from './materias/materias.service';
 import { HorariosService } from './horarios/horarios.service';
 import { ProfesoresService } from './profesores/profesores.service';
+import { JwtModule } from '@nestjs/jwt';
 
 
 
@@ -24,6 +25,11 @@ import { ProfesoresService } from './profesores/profesores.service';
       dropSchema: false,           // mantiene los datos al reiniciar (útil durante desarrollo)
       autoLoadEntities: true,      // sigue cargando automáticamente las entidades
       // logging: true,            // puedes descomentar si quieres ver logs SQL
+    }),
+
+    JwtModule.register({
+      secret: process.env.JWT_SECRET,
+      signOptions: { expiresIn: '1d' }, // opcional
     }),
 
     UsuariosModule,
