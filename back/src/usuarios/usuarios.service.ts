@@ -48,6 +48,9 @@ export class UsuariosService {
       sub: usuario.noCuenta,
       noCuenta: usuario.noCuenta,
       nivelUsuario: usuario.nivelUsuario,
+    },
+    {
+      secret: process.env.JWT_SECRET,
     });
 
     return { token, nivelUsuario: usuario.nivelUsuario };

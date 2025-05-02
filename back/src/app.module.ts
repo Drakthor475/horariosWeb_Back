@@ -20,6 +20,7 @@ import { ConfigModule } from '@nestjs/config';
 @Module({
   imports: [
 
+    ConfigModule.forRoot(),
     TypeOrmModule.forRoot({
       type: 'sqlite',
       database: 'sistema_Horarios', // nombre del archivo de SQLite (puedes cambiarlo si quieres)
@@ -29,10 +30,10 @@ import { ConfigModule } from '@nestjs/config';
       // logging: true,            // puedes descomentar si quieres ver logs SQL
     }),
     
-    ConfigModule.forRoot(),
+    
     JwtModule.register({
       secret: process.env.JWT_SECRET,
-      signOptions: { expiresIn: '1d' }, // opcional
+      //signOptions: { expiresIn: '1d' }, // opcional
     }),
 
     UsuariosModule,
