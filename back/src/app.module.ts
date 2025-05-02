@@ -11,6 +11,8 @@ import { MateriasService } from './materias/materias.service';
 import { HorariosService } from './horarios/horarios.service';
 import { ProfesoresService } from './profesores/profesores.service';
 import { JwtModule } from '@nestjs/jwt';
+import { ConfigModule } from '@nestjs/config';
+
 
 
 
@@ -26,7 +28,8 @@ import { JwtModule } from '@nestjs/jwt';
       autoLoadEntities: true,      // sigue cargando automáticamente las entidades
       // logging: true,            // puedes descomentar si quieres ver logs SQL
     }),
-
+    
+    ConfigModule.forRoot(),
     JwtModule.register({
       secret: process.env.JWT_SECRET,
       signOptions: { expiresIn: '1d' }, // opcional
