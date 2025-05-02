@@ -1,8 +1,9 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateProfesoreDto } from './dto/create-profesore.dto';
 import { Profesor } from './entities/profesore.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { ProfesorDto } from './dto/updateProfesor.dto';
 
 @Injectable()
 export class ProfesoresService{
@@ -27,7 +28,23 @@ export class ProfesoresService{
       });
       return last || null;
     }
- 
+    
+    async update(profesorDto: ProfesorDto, id_Profesor: number) {
+        const profesor = await this.ProfesorRepository.findOneBy({ id_profesor: id_Profesor });
+      
+        if (!profesor) {
+          throw new NotFoundException(`Materia con id ${id_Profesor} no encontrada`);
+        }
+      
+        // Solo actualiza las propiedades definidas en el DTO
+        Object.assign(profesor, {
+          ...profesorDto,
+        });
+      
+        await this.ProfesorRepository.save(profesor);
+        return profesor;
+      }
+
   async findOneByNombre(nombreProfesor: string){
     const profesor= await this.ProfesorRepository.findOne({
       where:{nombre:nombreProfesor}
